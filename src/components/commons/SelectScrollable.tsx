@@ -9,7 +9,7 @@ import {
 export function SelectScrollable() {
   return (
     <Select>
-      <SelectTrigger className="w-92 bg-white">
+      <SelectTrigger className="w-full bg-white py-5">
         <SelectValue placeholder="Hightlight" />
       </SelectTrigger>
       <SelectContent>
