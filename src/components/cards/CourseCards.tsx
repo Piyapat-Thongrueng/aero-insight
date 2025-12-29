@@ -7,7 +7,7 @@ const CourseCards = () => {
         <img src={cat} alt="cat" className="w-full object-cover lg:w-full lg:h-auto" />
       </div>
       <div className="py-3">
-        <button className="bg-brand-green-soft text-brand-green px-4 py-2 rounded-full text-body-2">
+        <button className="bg-brand-green-soft text-brand-green px-4 py-2 rounded-2xl text-body-2">
           Cat
         </button>
       </div>

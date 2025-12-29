@@ -10,7 +10,7 @@ const ArticleSection = () => {
         <h1 className="text-headline-3 text-brown-600">Latest articles</h1>
       </div>
       {/* Aricle filter */}
-      <section className="bg-brown-200 w-full py-2.5 lg:rounded-3xl">
+      <section className="bg-brown-200 w-full py-4 lg:rounded-3xl">
         <div className="w-full px-4">
           <div className="lg:flex lg:justify-between lg:items-center lg:px-2">
             <div className="hidden lg:flex lg:gap-5">
@@ -48,6 +48,7 @@ const ArticleSection = () => {
         <CourseCards />
       </section>
 
+      {/* Sub-Footer */}
       <div className="flex w-full justify-center items-center py-10 px-7 ">
         <p className="text-body-1 text-brown-600 text-center hover:underline">
           View more
