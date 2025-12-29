@@ -1,6 +1,6 @@
 const HeroSection = () => {
   return (
-    <section className="px-8 py-8 lg:pt-14 bg-white">
+    <section className="px-4 py-8 lg:pt-14 bg-white">
       {/* Grid Container */}
       <div className="grid grid-cols-1 gap-8 items-center max-w-7xl mx-auto lg:grid-cols-[1.6fr_2.1fr_1.8fr] lg:gap-12">
         {/* Left Column - Heading & Subtitle */}
@@ -16,11 +16,11 @@ const HeroSection = () => {
         </div>
         {/* Center Column - Hero Image */}
         <div className="flex justify-center">
-          <div className="w-full min-w-80">
+          <div className="w-full">
             <img
               src="https://res.cloudinary.com/dcbpjtd1r/image/upload/v1728449784/my-blog-post/xgfy0xnvyemkklcqodkg.jpg"
               alt="Author with cat in autumn forest"
-              className="rounded-4xl opacity-80 object-cover w-full h-117.5 lg:w-full lg:h-132.25 aspect-3/4"
+              className="rounded-4xl opacity-80 object-cover w-full h-117.5 lg:w-full lg:h-132.25"
             />
           </div>
         </div>
