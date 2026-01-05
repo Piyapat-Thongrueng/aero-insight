@@ -1,28 +1,40 @@
-import cat from "../../assets/images/cat.svg";
+interface BlogCardProps {
+  image: string;
+  category: string;
+  title: string;
+  description: string;
+  author: string;
+  date: string;
+}
 
-const CourseCards = () => {
+const BlogCard = ({
+  image,
+  category,
+  title,
+  description,
+  author,
+  date,
+}: BlogCardProps) => {
   return (
     <div>
       <div>
-        <img src={cat} alt="cat" className="w-full object-cover lg:w-full lg:h-auto" />
+        <img
+          src={image}
+          alt={title}
+          className="w-full object-cover h-64 rounded-4xl lg:w-full lg:h-118.75"
+        />
       </div>
       <div className="py-3">
         <button className="bg-brand-green-soft text-brand-green px-4 py-2 rounded-2xl text-body-2">
-          Cat
+          {category}
         </button>
       </div>
       <div>
-        <h2 className="text-headline-4 text-brown-600">
-          Understanding Cat Behavior: Why Your Feline Friend Acts the Way They
-          Do
-        </h2>
+        <h2 className="text-headline-4 text-brown-600">{title}</h2>
       </div>
       <div>
         <p className="pt-3 text-body-2 text-brown-400 line-clamp-2">
-          Dive into the curious world of cat behavior, exploring why cats knead,
-          purr, and chase imaginary prey. This article helps pet owners decode
-          their feline's actions and understand how their instincts as hunters
-          shape their daily routines.
+          {description}
         </p>
       </div>
       <div className="flex py-5 justify-start items-center gap-2">
@@ -34,17 +46,17 @@ const CourseCards = () => {
           />
         </div>
         <div>
-          <p className="text-body-2 text-brown-500">Thompson P.</p>
+          <p className="text-body-2 text-brown-500">{author}</p>
         </div>
         <div>
           <p className="text-brown-300">|</p>
         </div>
         <div>
-          <p className="text-body-2 text-brown-400">11 September 2024</p>
+          <p className="text-body-2 text-brown-400">{date}</p>
         </div>
       </div>
     </div>
   );
 };
 
-export default CourseCards;
+export default BlogCard;

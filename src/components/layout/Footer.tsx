@@ -4,7 +4,7 @@ import linkedin from "../../assets/icons/LinkedIN_black.svg";
 
 export const Footer = () => {
   return (
-    <div className="bg-brown-200 w-full p-10 lg:px-20 lg:py-15">
+    <div className="bg-brown-200 w-full p-10 lg:px-24 lg:py-14">
       <div className="flex flex-col lg:flex-row lg:justify-between lg:items-center gap-5">
         {/* Left side*/}
         <div className="flex justify-center lg:justify-start items-center gap-3">
