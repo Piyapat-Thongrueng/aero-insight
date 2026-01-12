@@ -2,10 +2,18 @@ import { blogPosts } from "@/data/blogPosts";
 import BlogCard from "../cards/BlogCard";
 import { InputDemo } from "../common/InputDemo";
 import { SelectScrollable } from "../common/SelectScrollable";
+import { useState } from "react";
 
 const ArticleSection = () => {
   // ใช้ map ข้อมูล category
   const categories = ["Highlight", "Cat", "Inspiration", "General"];
+
+  const [selectedCategory, setSelectedCategory] = useState<string>("Highlight");
+
+  const filteredPosts =
+    selectedCategory === "Highlight"
+      ? blogPosts
+      : blogPosts.filter((post) => post.category === selectedCategory);
 
   return (
     <section className="lg:px-20 lg:pt-6">
@@ -20,8 +28,13 @@ const ArticleSection = () => {
             <div className="hidden lg:flex lg:gap-5">
               {categories.map((category) => (
                 <button
-                  className="hover:bg-brown-300 hover:text-brown-500 p-3 rounded-lg text-body-1 text-brown-400"
+                  className={`p-3 rounded-lg text-body-1 transition-colors cursor-pointer ${
+                    selectedCategory === category
+                      ? "bg-brown-300 text-brown-600"
+                      : "text-brown-400 hover:bg-brown-300 hover:text-brown-500"
+                  }`}
                   key={category}
+                  onClick={() => setSelectedCategory(category)}
                 >
                   {category}
                 </button>
@@ -35,24 +48,35 @@ const ArticleSection = () => {
             Category
           </p>
           <div className="lg:hidden">
-            <SelectScrollable />
+            <SelectScrollable
+              value={selectedCategory}
+              onValueChange={setSelectedCategory}
+            />
           </div>
         </div>
       </section>
 
       {/* Article content */}
       <section className="grid grid-cols-1 pt-7 pb-2 px-3 w-full justify-center lg:grid-cols-2 lg:gap-6 lg:px-0">
-        {blogPosts.map((post) => (
-          <BlogCard
-            key={post.id}
-            image={post.image}
-            category={post.category}
-            title={post.title}
-            description={post.description}
-            author={post.author}
-            date={post.date}
-          />
-        ))}
+        {filteredPosts.length > 0 ? (
+          filteredPosts.map((post) => (
+            <BlogCard
+              key={post.id}
+              image={post.image}
+              category={post.category}
+              title={post.title}
+              description={post.description}
+              author={post.author}
+              date={post.date}
+            />
+          ))
+        ) : (
+          <div className="col-span-2 text-center py-10">
+            <p className="text-body-1 text-brown-400">
+              No articles found in this category
+            </p>
+          </div>
+        )}
       </section>
 
       {/* Sub-Footer */}
