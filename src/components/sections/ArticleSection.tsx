@@ -1,19 +1,52 @@
-import { blogPosts } from "@/data/blogPosts";
 import BlogCard from "../cards/BlogCard";
 import { InputDemo } from "../common/InputDemo";
 import { SelectScrollable } from "../common/SelectScrollable";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import axios from "axios";
+
+interface PostListProps {
+  id: number;
+  image: string;
+  category: string;
+  title: string;
+  description: string;
+  author: string;
+  date: string;
+  likes: number;
+  content: string;
+}
 
 const ArticleSection = () => {
   // ใช้ map ข้อมูล category
   const categories = ["Highlight", "Cat", "Inspiration", "General"];
 
   const [selectedCategory, setSelectedCategory] = useState<string>("Highlight");
+  const [postList, setPostList] = useState<PostListProps[]>([]);
+  const [isLoading, setIsLoading] = useState<boolean>(true);
 
-  const filteredPosts =
-    selectedCategory === "Highlight"
-      ? blogPosts
-      : blogPosts.filter((post) => post.category === selectedCategory);
+  // 1. Fetch post data from API using axios
+
+  const fetchPosts = async (category: string) => {
+    setIsLoading(true);
+    try {
+      const url =
+        category && category !== "Highlight"
+          ? `https://blog-post-project-api.vercel.app/posts?category=${category}`
+          : "https://blog-post-project-api.vercel.app/posts";
+      const response = await axios.get(url);
+      console.log(response);
+
+      setPostList(response.data.posts);
+    } catch (error) {
+      console.error("Error fetching posts:", error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchPosts(selectedCategory);
+  }, [selectedCategory]);
 
   return (
     <section className="lg:px-20 lg:pt-6">
@@ -32,9 +65,10 @@ const ArticleSection = () => {
                     selectedCategory === category
                       ? "bg-brown-300 text-brown-600"
                       : "text-brown-400 hover:bg-brown-300 hover:text-brown-500"
-                  }`}
+                  } ${isLoading ? "opacity-50 cursor-not-allowed" : ""}`}
                   key={category}
                   onClick={() => setSelectedCategory(category)}
+                  disabled={isLoading}
                 >
                   {category}
                 </button>
@@ -58,8 +92,12 @@ const ArticleSection = () => {
 
       {/* Article content */}
       <section className="grid grid-cols-1 pt-7 pb-2 px-3 w-full justify-center lg:grid-cols-2 lg:gap-6 lg:px-0">
-        {filteredPosts.length > 0 ? (
-          filteredPosts.map((post) => (
+        {isLoading ? (
+          <div className="col-span-2 text-center py-10">
+            <p className="text-body-1 text-brown-400">Loading articles...</p>
+          </div>
+        ) : postList.length > 0 ? (
+          postList.map((post) => (
             <BlogCard
               key={post.id}
               image={post.image}

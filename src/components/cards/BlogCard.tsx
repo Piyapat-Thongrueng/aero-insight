@@ -1,3 +1,5 @@
+import { formatDate } from "../../ีutils/formatDate";
+
 interface BlogCardProps {
   image: string;
   category: string;
@@ -15,6 +17,8 @@ const BlogCard = ({
   author,
   date,
 }: BlogCardProps) => {
+  const formattedDate = formatDate(date);
+
   return (
     <div>
       <div>
@@ -52,7 +56,7 @@ const BlogCard = ({
           <p className="text-brown-300">|</p>
         </div>
         <div>
-          <p className="text-body-2 text-brown-400">{date}</p>
+          <p className="text-body-2 text-brown-400">{formattedDate}</p>
         </div>
       </div>
     </div>
