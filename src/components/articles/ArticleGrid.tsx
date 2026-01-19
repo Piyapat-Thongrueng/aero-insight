@@ -21,9 +21,7 @@ const ArticleGrid = ({ postList, isLoading }: ArticleGridProps) => {
   return (
     <section className="grid grid-cols-1 pt-7 pb-2 px-3 w-full justify-center lg:grid-cols-2 lg:gap-6 lg:px-0">
       {isLoading ? (
-        <div className="col-span-2 text-center py-10">
-          <p className="text-body-1 text-brown-400">Loading articles...</p>
-        </div>
+        <></>
       ) : postList.length > 0 ? (
         postList.map((post) => (
           <BlogCard

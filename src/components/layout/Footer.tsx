@@ -2,7 +2,7 @@ import github from "../../assets/icons/Github_black.svg";
 import google from "../../assets/icons/Google_black.svg";
 import linkedin from "../../assets/icons/LinkedIN_black.svg";
 
-export const Footer = () => {
+const Footer = () => {
   return (
     <div className="bg-brown-200 w-full p-10 lg:px-24 lg:py-14">
       <div className="flex flex-col lg:flex-row lg:justify-between lg:items-center gap-5">
@@ -24,3 +24,5 @@ export const Footer = () => {
     </div>
   );
 };
+
+export default Footer;
