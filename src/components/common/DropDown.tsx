@@ -11,9 +11,7 @@ export const DropDown = () => {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <button className="p-2 cursor-pointer">
-          <Menu size={19} />
-        </button>
+        <Menu size={19} />
       </DropdownMenuTrigger>
 
       <DropdownMenuContent className="md:hidden w-screen p-12">
