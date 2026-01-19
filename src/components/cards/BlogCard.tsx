@@ -17,6 +17,7 @@ const BlogCard = ({
   author,
   date,
 }: BlogCardProps) => {
+  
   const formattedDate = formatDate(date);
 
   return (

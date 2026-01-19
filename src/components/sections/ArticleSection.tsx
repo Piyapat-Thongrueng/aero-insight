@@ -1,6 +1,6 @@
-import BlogCard from "../cards/BlogCard";
-import { InputDemo } from "../common/InputDemo";
-import { SelectScrollable } from "../common/SelectScrollable";
+import ArticleFilter from "../articles/ArticleFilter";
+import ArticleGrid from "../articles/ArticleGrid";
+import ViewMoreButton from "../articles/ViewMoreButton";
 import { useState, useEffect } from "react";
 import axios from "axios";
 
@@ -22,21 +22,45 @@ const ArticleSection = () => {
 
   const [selectedCategory, setSelectedCategory] = useState<string>("Highlight");
   const [postList, setPostList] = useState<PostListProps[]>([]);
-  const [isLoading, setIsLoading] = useState<boolean>(true);
+  const [page, setPage] = useState<number>(1);
+  const [hasMore, setHasMore] = useState<boolean>(true);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
 
   // 1. Fetch post data from API using axios
+  const fetchPosts = async (category: string, pageNum: number) => {
+    if (isLoading) return;
 
-  const fetchPosts = async (category: string) => {
     setIsLoading(true);
     try {
-      const url =
-        category && category !== "Highlight"
-          ? `https://blog-post-project-api.vercel.app/posts?category=${category}`
-          : "https://blog-post-project-api.vercel.app/posts";
-      const response = await axios.get(url);
-      console.log(response);
+      const categoryParam = category === "Highlight" ? "" : category;
+      const response = await axios.get(
+        "https://blog-post-project-api.vercel.app/posts",
+        {
+          params: {
+            page: pageNum,
+            limit: 6,
+            category: categoryParam,
+          },
+        },
+      );
 
-      setPostList(response.data.posts);
+      const newPosts = response.data.posts || [];
+
+      console.log(response.data.posts);
+      
+
+      //  เพิ่มโพสต์ใหม่ต่อท้ายโพสต์เดิม (ไม่แทนที่)
+      setPostList((prevPosts) => {
+        const existingPostId = prevPosts.map((post) => post.id);
+        const filteredNewPosts = newPosts.filter(
+          (post: PostListProps) => !existingPostId.includes(post.id),
+        );
+        return [...prevPosts, ...filteredNewPosts];
+      });
+      // เช็คว่ายังมีข้อมูลเหลือไหม
+      if (response.data.currentPage >= response.data.totalPages) {
+        setHasMore(false);
+      }
     } catch (error) {
       console.error("Error fetching posts:", error);
     } finally {
@@ -44,85 +68,47 @@ const ArticleSection = () => {
     }
   };
 
+  // Effect 1: รีเซ็ตเมื่อเปลี่ยน category
   useEffect(() => {
-    fetchPosts(selectedCategory);
+    setPostList([]);
+    setPage(1);
+    setHasMore(true);
   }, [selectedCategory]);
+
+  // Effect 2: โหลดข้อมูลเมื่อ page หรือ category เปลี่ยน
+  useEffect(() => {
+    fetchPosts(selectedCategory, page);
+  }, [selectedCategory, page]);
+
+  //  Handler: เมื่อกด View more
+  const handleViewMore = () => {
+    if (!isLoading && hasMore) {
+      setPage((prevPage) => prevPage + 1);
+    }
+  };
 
   return (
     <section className="lg:px-20 lg:pt-6">
-      {/* Lastest article */}
+      {/* Article header */}
       <div className="px-4 pb-3 pt-2 w-full lg:pb-7">
         <h1 className="text-headline-3 text-brown-600">Latest articles</h1>
       </div>
-      {/* Aricle filter */}
-      <section className="bg-brown-200 w-full py-4 lg:rounded-3xl">
-        <div className="w-full px-4">
-          <div className="lg:flex lg:justify-between lg:items-center lg:px-2">
-            <div className="hidden lg:flex lg:gap-5">
-              {categories.map((category) => (
-                <button
-                  className={`p-3 rounded-lg text-body-1 transition-colors cursor-pointer ${
-                    selectedCategory === category
-                      ? "bg-brown-300 text-brown-600"
-                      : "text-brown-400 hover:bg-brown-300 hover:text-brown-500"
-                  } ${isLoading ? "opacity-50 cursor-not-allowed" : ""}`}
-                  key={category}
-                  onClick={() => setSelectedCategory(category)}
-                  disabled={isLoading}
-                >
-                  {category}
-                </button>
-              ))}
-            </div>
-            <div className="lg:w-3/12">
-              <InputDemo />
-            </div>
-          </div>
-          <p className="mt-4 mb-1 text-sm text-brown-400 lg:hidden text-body-1">
-            Category
-          </p>
-          <div className="lg:hidden">
-            <SelectScrollable
-              value={selectedCategory}
-              onValueChange={setSelectedCategory}
-            />
-          </div>
-        </div>
-      </section>
+
+      <ArticleFilter
+        categories={categories}
+        selectedCategory={selectedCategory}
+        setSelectedCategory={setSelectedCategory}
+        isLoading={isLoading}
+      />
 
       {/* Article content */}
-      <section className="grid grid-cols-1 pt-7 pb-2 px-3 w-full justify-center lg:grid-cols-2 lg:gap-6 lg:px-0">
-        {isLoading ? (
-          <div className="col-span-2 text-center py-10">
-            <p className="text-body-1 text-brown-400">Loading articles...</p>
-          </div>
-        ) : postList.length > 0 ? (
-          postList.map((post) => (
-            <BlogCard
-              key={post.id}
-              image={post.image}
-              category={post.category}
-              title={post.title}
-              description={post.description}
-              author={post.author}
-              date={post.date}
-            />
-          ))
-        ) : (
-          <div className="col-span-2 text-center py-10">
-            <p className="text-body-1 text-brown-400">
-              No articles found in this category
-            </p>
-          </div>
-        )}
-      </section>
+      <ArticleGrid postList={postList} isLoading={isLoading && page === 1} />
 
-      {/* Sub-Footer */}
-      <div className="flex w-full justify-center items-center py-10 px-7 ">
-        <p className="text-body-1 text-brown-600 text-center hover:underline">
-          View more
-        </p>
-      </div>
+      <ViewMoreButton
+        isLoading={isLoading}
+        hasMore={hasMore}
+        onViewMore={handleViewMore}
+      />
     </section>
   );
 };
