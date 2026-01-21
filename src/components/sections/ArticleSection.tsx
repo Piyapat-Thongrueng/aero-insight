@@ -46,8 +46,6 @@ const ArticleSection = () => {
 
       const newPosts = response.data.posts || [];
 
-      console.log(response.data.posts);
-
       //  เพิ่มโพสต์ใหม่ต่อท้ายโพสต์เดิม (ไม่แทนที่)
       setPostList((prevPosts) => {
         const existingPostId = prevPosts.map((post) => post.id);
