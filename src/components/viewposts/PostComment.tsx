@@ -8,52 +8,99 @@ import { Button } from "../ui/button";
 import { Textarea } from "../ui/textarea";
 
 interface PostCommentProps {
-  id: number;
-  image: string;
-  category: string;
-  title: string;
-  description: string;
-  author: string;
-  date: string;
-  likes: number;
-  content: string;
+  post: {
+    id: number;
+    image: string;
+    category: string;
+    title: string;
+    description: string;
+    author: string;
+    date: string;
+    likes: number;
+    content: string;
+  };
+  onLikeClick: () => void;
+  onCommentAction: () => void;
+  onCopyLink: () => void;
 }
 
-const PostComment = ({ post }: { post: PostCommentProps }) => {
+const PostComment = ({
+  post,
+  onLikeClick,
+  onCommentAction,
+  onCopyLink,
+}: PostCommentProps) => {
+  // ฟังก์ชันสำหรับแชร์ไป Social Media
+  const handleSocialShare = (platform: "facebook" | "linkedin" | "twitter") => {
+    const currentUrl = window.location.href;
+    const encodedUrl = encodeURIComponent(currentUrl);
+
+    let shareUrl = "";
+
+    switch (platform) {
+      case "facebook":
+        shareUrl = `https://www.facebook.com/share.php?u=${encodedUrl}`;
+        break;
+      case "linkedin":
+        shareUrl = `https://www.linkedin.com/sharing/share-offsite/?url=${encodedUrl}`;
+        break;
+      case "twitter":
+        shareUrl = `https://twitter.com/share?url=${encodedUrl}`;
+        break;
+    }
+
+    // เปิดหน้าต่างใหม่
+    window.open(shareUrl, "_blank", "noopener,noreferrer");
+  };
+
   return (
-    <footer className="col-span-8">
+    <section className="md:col-span-8 md:px-20">
       {/* Emoji & likes */}
-      <section className="w-full px-4 py-6 bg-brown-200 mb-5 mt-5 flex flex-col gap-5">
-        <div className="bg-white px-6 py-4 rounded-full border border-black flex items-center justify-center gap-1">
+      <section className="w-full px-4 py-6 bg-brown-200 mb-5 mt-5 md:mt-0 flex flex-col gap-5 md:flex-row md:items-center md:justify-between md:rounded-3xl md:py-4 md:px-8">
+        <div
+          onClick={onLikeClick}
+          className="bg-white cursor-pointer hover:opacity-70 px-6 py-4 rounded-full border border-black flex items-center justify-center gap-1 md:py-3 md:px-10"
+        >
           <SmileIcon />
           <span>{post.likes}</span>
         </div>
-        <div className="flex items-center justify-between">
-          <div className="flex px-8 py-5 bg-white rounded-full border border-black items-center gap-2">
+        <div className="flex items-center justify-between md:gap-6">
+          <div
+            onClick={onCopyLink}
+            className="flex px-8 py-5 bg-white cursor-pointer hover:opacity-70 rounded-full border border-black items-center gap-2 md:py-4 md:px-10"
+          >
             <CopyLinkIcon />
-            <p>Copy Link</p>
+            <p className="text-body-1">Copy Link</p>
           </div>
-          <div className="flex gap-2 flex-wrap">
-            <FacebookIcon />
-            <LinkInIcon />
-            <XtwiiterIcon />
+          <div className="flex gap-2 flex-wrap md:gap-4">
+            <div onClick={() => handleSocialShare("facebook")}>
+              <FacebookIcon />
+            </div>
+            <div onClick={() => handleSocialShare("linkedin")}>
+              <LinkInIcon />
+            </div>
+            <div onClick={() => handleSocialShare("twitter")}>
+              <XtwiiterIcon />
+            </div>
           </div>
         </div>
       </section>
 
       {/* Comment */}
-      <section className="w-full px-4 flex flex-col space-y-4 mb-14">
+      <section className="w-full px-4 flex flex-col space-y-4 mb-14 md:px-0">
         <h2 className="text-body-1 text-brown-400">Comment</h2>
         <Textarea
           name="description"
           id="description"
-          placeholder="What are your thoughts"
-          className="border border-brown-400 p-4 rounded-lg"
+          placeholder="What are your thoughts?"
+          className="border border-brown-400 p-4 rounded-lg bg-white"
+          onFocus={onCommentAction}
         ></Textarea>
         <Button
           variant="default"
           size="lg"
-          className="w-3/12 rounded-full py-6 text-body-1 text-white"
+          className="w-36 rounded-full py-6 text-body-1 text-white md:px-10 md:self-end cursor-pointer"
+          onClick={onCommentAction}
         >
           Send
         </Button>
@@ -119,7 +166,7 @@ const PostComment = ({ post }: { post: PostCommentProps }) => {
           </div>
         </div>
       </section>
-    </footer>
+    </section>
   );
 };
 

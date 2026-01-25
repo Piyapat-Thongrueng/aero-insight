@@ -1,7 +1,7 @@
 
 const LinkInIcon = () => {
   return (
-    <>
+    <div className="cursor-pointer hover:opacity-70">
       <svg
         width="48"
         height="48"
@@ -16,7 +16,7 @@ const LinkInIcon = () => {
           fill="#0077B5"
         />
       </svg>
-    </>
+    </div>
   );
 };
 

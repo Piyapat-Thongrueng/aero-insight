@@ -18,7 +18,7 @@ interface PostListProps {
 
 const ArticleSection = () => {
   // ใช้ map ข้อมูล category
-  const categories = ["Highlight", "Cat", "Inspiration", "General"];
+  const categories: string[] = ["Highlight", "Cat", "Inspiration", "General"];
 
   const [selectedCategory, setSelectedCategory] = useState<string>("Highlight");
   const [postList, setPostList] = useState<PostListProps[]>([]);

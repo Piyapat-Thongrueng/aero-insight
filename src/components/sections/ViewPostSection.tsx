@@ -5,6 +5,8 @@ import { Spinner } from "../ui/spinner";
 import PostContent from "../viewposts/PostContent";
 import PostHeader from "../viewposts/PostHeader";
 import PostComment from "../viewposts/PostComment";
+import AuthModal from "../modals/AuthModal";
+import { toast } from "sonner";
 
 interface Post {
   id: number;
@@ -23,6 +25,7 @@ const ViewPostSection = () => {
   const { postId } = useParams<{ postId: string }>();
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [error, setError] = useState<boolean>(false);
+  const [showAuthModal, setShowAuthModal] = useState<boolean>(false);
 
   const fetchPostById = async (id: string) => {
     setIsLoading(true);
@@ -46,6 +49,35 @@ const ViewPostSection = () => {
       fetchPostById(postId);
     }
   }, [postId]);
+
+  const handleLikeClick = () => {
+    setShowAuthModal(true);
+  };
+
+  const handleCommentAction = () => {
+    setShowAuthModal(true);
+  };
+
+  const handleCopyLink = async () => {
+    try {
+      const currentUrl = window.location.href;
+      await navigator.clipboard.writeText(currentUrl);
+
+      // แสดง toast สำเร็จ
+      toast.success("Copied!", {
+        description: "This article link has been copied to your clipboard.",
+        duration: 3000,
+      });
+    } catch (error) {
+      console.error("Failed to copy:", error);
+
+      // แสดง toast error
+      toast.error("Failed to copy link", {
+        description: "Please try again.",
+        duration: 3000,
+      });
+    }
+  };
 
   return (
     <>
@@ -80,7 +112,16 @@ const ViewPostSection = () => {
         <section className="w-full md:grid md:grid-cols-12">
           <PostHeader post={post} />
           <PostContent post={post} />
-          <PostComment post={post} />
+          <PostComment
+            post={post}
+            onLikeClick={handleLikeClick}
+            onCommentAction={handleCommentAction}
+            onCopyLink={handleCopyLink}
+          />
+          <AuthModal
+            isOpen={showAuthModal}
+            onClose={() => setShowAuthModal(false)}
+          />
         </section>
       )}
     </>

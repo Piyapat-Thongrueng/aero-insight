@@ -1,7 +1,7 @@
 
 const FacebookIcon = () => {
   return (
-    <>
+    <div className="cursor-pointer hover:opacity-70">
       <svg
         width="48"
         height="48"
@@ -16,7 +16,7 @@ const FacebookIcon = () => {
           fill="#1877F2"
         />
       </svg>
-    </>
+    </div>
   );
 };
 
