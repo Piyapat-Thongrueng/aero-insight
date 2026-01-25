@@ -1,4 +1,4 @@
-import { InputDemo } from "../common/InputDemo";
+import { SearchFeature } from "./SearchFeature";
 import { SelectScrollable } from "../common/SelectScrollable";
 
 interface ArticleFilterProps {
@@ -35,7 +35,7 @@ const ArticleFilter = ({
             ))}
           </div>
           <div className="lg:w-3/12">
-            <InputDemo />
+            <SearchFeature />
           </div>
         </div>
         <p className="mt-4 mb-1 text-sm text-brown-400 lg:hidden text-body-1">

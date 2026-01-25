@@ -18,7 +18,7 @@ interface PostListProps {
 
 const ArticleSection = () => {
   // ใช้ map ข้อมูล category
-  const categories = ["Highlight", "Cat", "Inspiration", "General"];
+  const categories: string[] = ["Highlight", "Cat", "Inspiration", "General"];
 
   const [selectedCategory, setSelectedCategory] = useState<string>("Highlight");
   const [postList, setPostList] = useState<PostListProps[]>([]);
@@ -45,8 +45,6 @@ const ArticleSection = () => {
       );
 
       const newPosts = response.data.posts || [];
-
-      console.log(response.data.posts);
 
       //  เพิ่มโพสต์ใหม่ต่อท้ายโพสต์เดิม (ไม่แทนที่)
       setPostList((prevPosts) => {
