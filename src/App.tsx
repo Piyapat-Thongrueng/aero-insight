@@ -3,6 +3,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import LandingPage from "./pages/LandingPage";
 import ViewPostPage from "./pages/ViewPostPage";
 import { Toaster } from "sonner";
+import NotFoundPage from "./pages/NotFoundPage";
 
 
 function App() {
@@ -12,6 +13,7 @@ function App() {
         <Routes>
           <Route path="/" element={<LandingPage />} />
           <Route path="/post/:postId" element={<ViewPostPage />} />
+          <Route path="*" element={<NotFoundPage />} />
         </Routes>
         <Toaster position="top-center" richColors/>
       </BrowserRouter>
