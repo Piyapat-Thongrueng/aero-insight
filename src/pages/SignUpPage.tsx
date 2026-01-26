@@ -6,7 +6,6 @@ import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 
 const SignUpPage = () => {
-  const navigate = useNavigate();
   const [formData, setFormData] = useState({
     name: "",
     username: "",
