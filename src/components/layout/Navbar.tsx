@@ -11,17 +11,26 @@ const Navbar = () => {
     navigate("/");
   };
 
+  const handleLoginClick = () => {
+    navigate("/login");
+  }
+
+
+  const handleSignupClick = () => {
+    navigate("/signup");
+  }
+
   return (
     <nav className="flex px-8 pt-4 pb-3 justify-between items-center border-b lg:px-20 lg:py-4">
       <div className="cursor-pointer" onClick={handleLogoClick}>
         <img src={weblogo} alt="web-logo" className="w-6 h-6 lg:w-11 lg:h-11" />
       </div>
       <div className="hidden md:flex gap-1.5">
-        <LoginButton />
-        <SignupButton />
+        <LoginButton onClick={handleLoginClick} />
+        <SignupButton onClick={handleSignupClick} />
       </div>
       <button className="md:hidden flex items-center">
-        <DropDown />
+        <DropDown onLogin={handleLoginClick} onSignup={handleSignupClick} />
       </button>
     </nav>
   );

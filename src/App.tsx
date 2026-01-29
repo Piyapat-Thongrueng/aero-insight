@@ -4,7 +4,8 @@ import LandingPage from "./pages/LandingPage";
 import ViewPostPage from "./pages/ViewPostPage";
 import { Toaster } from "sonner";
 import NotFoundPage from "./pages/NotFoundPage";
-
+import SignUpPage from "./pages/SignUpPage";
+import LoginPage from "./pages/LoginPage";
 
 function App() {
   return (
@@ -13,9 +14,11 @@ function App() {
         <Routes>
           <Route path="/" element={<LandingPage />} />
           <Route path="/post/:postId" element={<ViewPostPage />} />
+          <Route path="/signup" element={<SignUpPage />} />
+          <Route path="/login" element={<LoginPage />} />
           <Route path="*" element={<NotFoundPage />} />
         </Routes>
-        <Toaster position="top-center" richColors/>
+        <Toaster position="top-center" richColors />
       </BrowserRouter>
     </>
   );
