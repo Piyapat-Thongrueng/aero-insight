@@ -1,7 +1,11 @@
-const SignupButton = () => {
+interface SignupButtonProps {
+  onClick?: () => void;
+}
+
+const SignupButton = ({ onClick }: SignupButtonProps) => {
   return (
-    <div className="border border-brown-600 bg-brown-600 text-white px-10 py-3 rounded-full hover:opacity-70 text-center">
-      <button>Sign up</button>
+    <div className="border border-brown-600 bg-brown-600 text-white px-10 py-3 rounded-full hover:opacity-70 text-center cursor-pointer">
+      <button className="cursor-pointer" onClick={onClick}>Sign up</button>
     </div>
   );
 };
