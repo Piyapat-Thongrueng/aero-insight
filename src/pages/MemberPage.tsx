@@ -37,8 +37,8 @@ const MemberPage = () => {
             </div>
           </section>
           {/* update profile */}
-          <section className="px-4 flex flex-col mb-10 md:flex-row md:bg-brown-100 md:mb-0">
-            <main className="flex flex-col gap-5 py-8 bg-brown-100 rounded-xl md:w-full md:rounded-l-none">
+          <section className="px-4 flex flex-col mb-10 md:flex-row md:bg-white md:mb-0">
+            <main className="flex flex-col gap-5 py-8 bg-brown-100 rounded-xl md:w-full md:rounded-l-none md:bg-white">
               <div className="flex flex-col items-center justify-center gap-5">
                 <img
                   src="https://res.cloudinary.com/dcbpjtd1r/image/upload/v1728449784/my-blog-post/xgfy0xnvyemkklcqodkg.jpg"
