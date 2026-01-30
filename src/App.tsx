@@ -6,6 +6,7 @@ import { Toaster } from "sonner";
 import NotFoundPage from "./pages/NotFoundPage";
 import SignUpPage from "./pages/SignUpPage";
 import LoginPage from "./pages/LoginPage";
+import MemberPage from "./pages/MemberPage";
 
 function App() {
   return (
@@ -16,6 +17,7 @@ function App() {
           <Route path="/post/:postId" element={<ViewPostPage />} />
           <Route path="/signup" element={<SignUpPage />} />
           <Route path="/login" element={<LoginPage />} />
+          <Route path="/members" element={<MemberPage />} />
           <Route path="*" element={<NotFoundPage />} />
         </Routes>
         <Toaster position="top-center" richColors />
