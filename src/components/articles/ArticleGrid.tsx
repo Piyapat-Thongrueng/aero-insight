@@ -19,7 +19,7 @@ interface Post {
 
 const ArticleGrid = ({ postList, isLoading }: ArticleGridProps) => {
   return (
-    <section className="grid grid-cols-1 pt-7 pb-2 px-3 w-full justify-center lg:grid-cols-2 lg:gap-6 lg:px-0">
+    <section className="grid grid-cols-1 pt-7 pb-2 px-3 w-full justify-center sm:px-7 lg:grid-cols-2 lg:gap-6 lg:px-0">
       {isLoading ? (
         <></>
       ) : postList.length > 0 ? (

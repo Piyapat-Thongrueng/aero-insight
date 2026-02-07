@@ -15,7 +15,7 @@ const ArticleFilter = ({
   isLoading,
 }: ArticleFilterProps) => {
   return (
-    <section className="bg-brown-200 w-full py-4 lg:rounded-3xl">
+    <section className="bg-brown-200 w-full py-4 sm:px-2 sm:py-7 lg:rounded-3xl">
       <div className="w-full px-4">
         <div className="lg:flex lg:justify-between lg:items-center lg:px-2">
           <div className="hidden lg:flex lg:gap-5">
@@ -38,7 +38,7 @@ const ArticleFilter = ({
             <SearchFeature />
           </div>
         </div>
-        <p className="mt-4 mb-1 text-sm text-brown-400 lg:hidden text-body-1">
+        <p className="mt-4 mb-3 text-sm text-brown-400 lg:hidden text-body-1">
           Category
         </p>
         <div className="lg:hidden">

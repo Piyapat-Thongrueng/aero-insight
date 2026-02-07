@@ -18,7 +18,7 @@ const PostContent = ({ post }: PostContentProps) => {
   return (
     <>
       {/* Main Content Section */}
-      <main className="p-4 md:px-20 md:col-span-8 md:flex md:flex-col md:gap-5">
+      <main className="p-4 sm:px-10 md:col-span-8 md:flex md:flex-col md:gap-5 lg:px-15">
         <p className="text-body-1 text-brown-500">{post.description}</p>
         <article className="markdown text-brown-500 mb-5 text-body-1">
           <ReactMarkdown>{post.content}</ReactMarkdown>
@@ -26,7 +26,7 @@ const PostContent = ({ post }: PostContentProps) => {
       </main>
 
       {/* Author Card Section */}
-      <aside className="p-4 md:col-span-4 md:pr-20 md:-mt-55 md:-mb-96">
+      <aside className="p-4 md:col-span-4 md:pr-10 md:-mt-55 md:-mb-96 lg:pr-15">
         <div className="bg-brown-200 p-6 rounded-xl flex flex-col items-start gap-4 sticky top-20">
           {/* Author Info */}
           <div className="flex gap-4 border-b-2 border-brown-300 w-full pb-5 flex-wrap">
