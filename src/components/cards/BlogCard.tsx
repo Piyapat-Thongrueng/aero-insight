@@ -29,7 +29,7 @@ const BlogCard = ({
           <img
             src={image}
             alt={title}
-            className="w-full object-cover h-64 rounded-4xl lg:w-full lg:h-118.75"
+            className="w-full object-cover h-64 rounded-4xl sm:h-118.75 lg:w-full lg:h-118.75"
           />
         </div>
         <div className="py-3">

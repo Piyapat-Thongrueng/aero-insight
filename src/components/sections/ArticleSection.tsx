@@ -87,7 +87,7 @@ const ArticleSection = () => {
   return (
     <section className="lg:px-20 lg:pt-6">
       {/* Article header */}
-      <div className="px-4 pb-3 pt-2 w-full lg:pb-7">
+      <div className="px-4 pb-3 pt-2 w-full sm:px-7 lg:pb-7">
         <h1 className="text-headline-3 text-brown-600">Latest articles</h1>
       </div>
 

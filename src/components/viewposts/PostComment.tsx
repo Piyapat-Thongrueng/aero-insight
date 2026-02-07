@@ -54,7 +54,7 @@ const PostComment = ({
   };
 
   return (
-    <section className="md:col-span-8 md:px-20">
+    <section className="md:col-span-8 md:px-10 lg:px-15">
       {/* Emoji & likes */}
       <section className="w-full px-4 py-6 bg-brown-200 mb-5 mt-5 md:mt-0 flex flex-col gap-5 md:flex-row md:items-center md:justify-between md:rounded-3xl md:py-4 md:px-8">
         <div
@@ -107,7 +107,7 @@ const PostComment = ({
       </section>
 
       {/* User's comment */}
-      <section className="w-full px-4 mb-10">
+      <section className="w-full px-4 sm:px-0 mb-10">
         <div className="flex gap-4 border-b border-brown-300 w-full pb-5 flex-wrap mb-5">
           <img
             src="https://res.cloudinary.com/dcbpjtd1r/image/upload/v1728449784/my-blog-post/xgfy0xnvyemkklcqodkg.jpg"
