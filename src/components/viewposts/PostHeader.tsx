@@ -8,7 +8,7 @@ interface PostHeaderProps {
     title: string;
     description: string;
     author: string;
-    date: string;
+    created_at: string;
     likes: number;
     content: string;
   };
@@ -27,13 +27,13 @@ const PostHeader = ({ post }: PostHeaderProps) => {
       </header>
 
       {/* Title */}
-      <header className="w-full p-4 gap-4 sm:px-10 md:col-span-8 lg:px-15 lg:mt-3">
+      <header className="w-full p-4 gap-4 sm:px-8 md:col-span-8 lg:px-15 lg:mt-3">
         <div className="flex items-center gap-5 mb-4">
           <span className="bg-brand-green-soft text-brand-green px-4 py-2 rounded-2xl text-body-2">
             {post.category}
           </span>
           <span className="text-body-1 text-brown-400">
-            {formatDate(post.date)}
+            {formatDate(post.created_at)}
           </span>
         </div>
         <p className="text-brown-600 text-[24px] md:text-[40px] font-semibold">
