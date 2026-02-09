@@ -8,9 +8,9 @@ import Footer from "@/components/layout/Footer";
 
 const MemberPage = () => {
   return (
-    <div className="w-full min-h-screen bg-white">
+    <div className="w-full min-h-screen bg-white flex flex-col">
       <Navbar />
-      <div className="flex flex-col md:grid md:grid-cols-12 md:gap-0">
+      <div className="flex flex-col flex-1 md:grid md:grid-cols-12 md:gap-0">
         {/* profile & reset-password */}
         <section className="flex flex-wrap px-5 py-5 gap-6 md:flex-col md:col-span-2 md:border-r md:border-brown-300">
           <div className="flex items-center gap-3">

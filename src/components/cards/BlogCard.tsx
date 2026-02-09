@@ -8,7 +8,7 @@ interface BlogCardProps {
   title: string;
   description: string;
   author: string;
-  date: string;
+  created_at: string;
 }
 
 const BlogCard = ({
@@ -18,9 +18,9 @@ const BlogCard = ({
   title,
   description,
   author,
-  date,
+  created_at,
 }: BlogCardProps) => {
-  const formattedDate = formatDate(date);
+  const formattedDate = formatDate(created_at);
 
   return (
     <article>

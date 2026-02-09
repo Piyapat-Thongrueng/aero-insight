@@ -12,7 +12,7 @@ interface Post {
   title: string;
   description: string;
   author: string;
-  date: string;
+  created_at: string;
   likes: number;
   content: string;
 }
@@ -32,7 +32,7 @@ const ArticleGrid = ({ postList, isLoading }: ArticleGridProps) => {
             title={post.title}
             description={post.description}
             author={post.author}
-            date={post.date}
+            created_at={post.created_at}
           />
         ))
       ) : (

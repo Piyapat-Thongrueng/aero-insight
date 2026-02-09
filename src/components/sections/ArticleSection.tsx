@@ -11,7 +11,7 @@ interface PostListProps {
   title: string;
   description: string;
   author: string;
-  date: string;
+  created_at: string;
   likes: number;
   content: string;
 }
@@ -34,7 +34,7 @@ const ArticleSection = () => {
     try {
       const categoryParam = category === "Highlight" ? "" : category;
       const response = await axios.get(
-        "https://blog-post-project-api.vercel.app/posts",
+        "https://server-aero-insight.vercel.app/posts",
         {
           params: {
             page: pageNum,
@@ -43,7 +43,7 @@ const ArticleSection = () => {
           },
         },
       );
-
+      console.log(response.data.posts);
       const newPosts = response.data.posts || [];
 
       //  เพิ่มโพสต์ใหม่ต่อท้ายโพสต์เดิม (ไม่แทนที่)

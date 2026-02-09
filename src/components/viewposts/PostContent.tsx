@@ -8,7 +8,7 @@ interface PostContentProps {
     title: string;
     description: string;
     author: string;
-    date: string;
+    created_at: string;
     likes: number;
     content: string;
   };
@@ -18,7 +18,7 @@ const PostContent = ({ post }: PostContentProps) => {
   return (
     <>
       {/* Main Content Section */}
-      <main className="p-4 sm:px-10 md:col-span-8 md:flex md:flex-col md:gap-5 lg:px-15">
+      <main className="p-5 sm:px-8 md:col-span-8 md:flex md:flex-col md:gap-5 lg:px-15">
         <p className="text-body-1 text-brown-500">{post.description}</p>
         <article className="markdown text-brown-500 mb-5 text-body-1">
           <ReactMarkdown>{post.content}</ReactMarkdown>
