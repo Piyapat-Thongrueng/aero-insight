@@ -15,7 +15,7 @@ interface PostCommentProps {
     title: string;
     description: string;
     author: string;
-    date: string;
+    created_at: string;
     likes: number;
     content: string;
   };
@@ -54,7 +54,7 @@ const PostComment = ({
   };
 
   return (
-    <section className="md:col-span-8 md:px-10 lg:px-15">
+    <section className="md:col-span-8 md:px-7 lg:px-15">
       {/* Emoji & likes */}
       <section className="w-full px-4 py-6 bg-brown-200 mb-5 mt-5 md:mt-0 flex flex-col gap-5 md:flex-row md:items-center md:justify-between md:rounded-3xl md:py-4 md:px-8">
         <div
@@ -87,7 +87,7 @@ const PostComment = ({
       </section>
 
       {/* Comment */}
-      <section className="w-full px-4 flex flex-col space-y-4 mb-14 md:px-0">
+      <section className="w-full px-5 flex flex-col space-y-4 mb-14 md:px-0">
         <h2 className="text-body-1 text-brown-400">Comment</h2>
         <Textarea
           name="description"
@@ -117,7 +117,7 @@ const PostComment = ({
           <div className="flex flex-col items-start justify-start">
             <p className="text-headline-4 text-brown-500">{post.author}</p>
             <p className="text-body-3 text-brown-400">
-              {formatDate(post.date)} at 18:30 AM
+              {formatDate(post.created_at)} at 18:30 AM
             </p>
           </div>
           <div>
@@ -136,7 +136,7 @@ const PostComment = ({
           <div className="flex flex-col items-start justify-start">
             <p className="text-headline-4 text-brown-500">{post.author}</p>
             <p className="text-body-3 text-brown-400">
-              {formatDate(post.date)} at 18:30 AM
+              {formatDate(post.created_at)} at 18:30 AM
             </p>
           </div>
           <div>
@@ -155,7 +155,7 @@ const PostComment = ({
           <div className="flex flex-col items-start justify-start">
             <p className="text-headline-4 text-brown-500">{post.author}</p>
             <p className="text-body-3 text-brown-400">
-              {formatDate(post.date)} at 18:30 AM
+              {formatDate(post.created_at)} at 18:30 AM
             </p>
           </div>
           <div>

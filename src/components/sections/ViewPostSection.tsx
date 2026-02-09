@@ -15,7 +15,7 @@ interface Post {
   title: string;
   description: string;
   author: string;
-  date: string;
+  created_at: string;
   likes: number;
   content: string;
 }
@@ -31,11 +31,9 @@ const ViewPostSection = () => {
     setIsLoading(true);
     setError(false);
     try {
-      const response = await axios.get(
-        `https://blog-post-project-api.vercel.app/posts/${id}`,
-      );
-      console.log("Fetched post:", response.data);
-      setPost(response.data);
+      const response = await axios.get(`https://server-aero-insight.vercel.app/posts/${id}`);
+      console.log("Fetched post by POST_ID:", response.data.data);
+      setPost(response.data.data);
     } catch (error) {
       console.error("Error fetching post:", error);
       setError(true);
