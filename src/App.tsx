@@ -17,6 +17,7 @@ function App() {
     <>
       <BrowserRouter>
         <Routes>
+          {/* Public Routes */}
           <Route path="/" element={<LandingPage />} />
           <Route path="/post/:postId" element={<ViewPostPage />} />
           <Route path="/signup" element={<SignUpPage />} />
@@ -28,6 +29,8 @@ function App() {
             <Route index element={<Navigate to="/admin/articles" replace />} />
             <Route path="articles" element={<ArticleManagementPage />} />
           </Route>
+
+          {/* 404 NOT FOUND Route */}
           <Route path="*" element={<NotFoundPage />} />
         </Routes>
         <Toaster position="top-center" richColors />
