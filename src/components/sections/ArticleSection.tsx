@@ -16,6 +16,8 @@ interface PostListProps {
   content: string;
 }
 
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
+
 const ArticleSection = () => {
   // ใช้ map ข้อมูล category
   const categories: string[] = ["Highlight", "Cat", "Inspiration", "General"];
@@ -34,7 +36,7 @@ const ArticleSection = () => {
     try {
       const categoryParam = category === "Highlight" ? "" : category;
       const response = await axios.get(
-        "https://server-aero-insight.vercel.app/posts",
+        `${API_BASE_URL}/posts`,
         {
           params: {
             page: pageNum,

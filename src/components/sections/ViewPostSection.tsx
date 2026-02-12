@@ -20,6 +20,8 @@ interface Post {
   content: string;
 }
 
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
+
 const ViewPostSection = () => {
   const [post, setPost] = useState<Post | null>(null);
   const { postId } = useParams<{ postId: string }>();
@@ -31,7 +33,7 @@ const ViewPostSection = () => {
     setIsLoading(true);
     setError(false);
     try {
-      const response = await axios.get(`https://server-aero-insight.vercel.app/posts/${id}`);
+      const response = await axios.get(`${API_BASE_URL}/posts/${id}`);
       console.log("Fetched post by POST_ID:", response.data.data);
       setPost(response.data.data);
     } catch (error) {
@@ -89,7 +91,7 @@ const ViewPostSection = () => {
 
       {/* Error State */}
       {!isLoading && (error || !post) && (
-        <div className="container mx-auto px-4 py-20 text-center">
+        <div className="min-h-screen container mx-auto px-4 py-20 text-center">
           <h1 className="text-4xl font-bold text-brown-600 mb-4">
             Article Not Found
           </h1>
