@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Navbar from "@/components/layout/Navbar";
+import Footer from "@/components/layout/Footer";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
@@ -31,11 +32,13 @@ const SignUpPage = () => {
   });
 
   // ขั้นตอนที่ 2: Stateสำหรับการจัดการข้อผิดพลาดในการตรวจสอบข้อมูลฟอร์ม
+  // โดยจะเก็บข้อผิดพลาดในรูปแบบของ object ที่มี key เป็นชื่อฟิลด์และ value เป็นข้อความข้อผิดพลาดที่เกี่ยวข้องกับฟิลด์นั้น ๆ ซึ่งจะถูกอัปเดตเมื่อมีการตรวจสอบข้อมูลฟอร์มและพบข้อผิดพลาด
   const [formErrors, setFormErrors] = useState<SignUpFormErrors>({});
 
   // ขั้นตอนที่ 3: Validate function สำหรับตรวจสอบความถูกต้องของข้อมูลฟอร์มที่ user กรอกเข้ามา
   // โดยจะคืนค่าเป็น object ที่มีข้อผิดพลาด (ถ้ามี) แล้วนำไปใช้ในการแสดงผลข้อผิดพลาดในฟอร์มแต่ละช่องinput
   const validateInputs = (): SignUpFormErrors => {
+    // สร้าง object ว่างสำหรับเก็บข้อผิดพลาดที่พบในการตรวจสอบข้อมูลฟอร์มโดยในตอนแรกจะไม่มีข้อผิดพลาดใด ๆ และจะถูกเติมเต็มเมื่อมีการตรวจสอบข้อมูลฟอร์มและพบข้อผิดพลาดในแต่ละฟิลด์
     const errors: SignUpFormErrors = {};
 
     // ตรวจสอบชื่อ (name field)
@@ -78,30 +81,40 @@ const SignUpPage = () => {
     return errors;
   };
 
+  // ขั้นตอนที่ 4: ฟังก์ชัน handleChange สำหรับจัดการการเปลี่ยนแปลงของ input ในฟอร์ม โดยจะอัปเดตค่าใน state formValues ตามชื่อของฟิลด์ที่ถูกเปลี่ยนแปลงและค่าที่ผู้ใช้กรอกเข้ามา
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    // ดึงชื่อ (name) และค่าที่กรอกเข้ามา (value) จาก event ของ input ที่ถูกเปลี่ยนแปลง และใช้ setFormValues เพื่ออัปเดตค่าใน state formValues 
+    // โดยจะคงค่าที่มีอยู่แล้วและอัปเดตเฉพาะฟิลด์ที่ถูกเปลี่ยนแปลงเท่านั้น ซึ่งช่วยให้การจัดการข้อมูลฟอร์มเป็นไปอย่างมีประสิทธิภาพและไม่ทำให้ข้อมูลฟอร์มที่มีอยู่แล้วสูญหายเมื่อมีการเปลี่ยนแปลงในฟิลด์อื่น ๆ
     const { name, value } = e.target;
+    // อัปเดตค่าใน state formValues ตามชื่อของฟิลด์ที่ถูกเปลี่ยนแปลงและค่าที่ผู้ใช้กรอกเข้ามา โดยจะคงค่าที่มีอยู่แล้วและอัปเดตเฉพาะฟิลด์ที่ถูกเปลี่ยนแปลงเท่านั้น
     setFormValues((prev) => ({
       ...prev,
       [name]: value,
     }));
   };
 
+  // ขั้นตอนที่ 5: ฟังก์ชัน handleSubmit สำหรับจัดการการส่งฟอร์ม โดยจะทำการตรวจสอบความถูกต้องของข้อมูลฟอร์มก่อนที่จะเรียกใช้ฟังก์ชัน register จาก context 
+  // เพื่อทำการสมัครสมาชิก และหากมีข้อผิดพลาดในการสมัครจะแสดงข้อความข้อผิดพลาดผ่าน toast
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    // Validate form
+    // เรียกใช้ฟังก์ชัน validateInputs เพื่อทำการตรวจสอบความถูกต้องของข้อมูลฟอร์มที่ผู้ใช้กรอกเข้ามา และเก็บข้อผิดพลาดที่พบในการตรวจสอบไว้ในตัวแปร errors 
+    // ซึ่งจะถูกนำไปใช้ในการแสดงผลข้อผิดพลาดในฟอร์มแต่ละช่องinput
     const errors = validateInputs();
     setFormErrors(errors);
 
-    // If there are validation errors, stop submission
+    // หากมีข้อผิดพลาดในการตรวจสอบข้อมูลฟอร์ม ให้หยุดการดำเนินการต่อไปและไม่เรียกใช้ฟังก์ชัน register เพื่อทำการสมัครสมาชิก
     if (Object.keys(errors).length > 0) {
       return;
     }
 
-    // Call register API
+    // หากข้อมูลฟอร์มถูกต้อง ให้เรียกใช้ฟังก์ชัน register จาก context เพื่อทำการสมัครสมาชิก โดยจะส่งข้อมูลฟอร์มที่ผู้ใช้กรอกเข้ามาเป็นพารามิเตอร์ 
+    // และหากมีข้อผิดพลาดในการสมัครจะแสดงข้อความข้อผิดพลาดผ่าน toast
     const result = await register(formValues);
+
     if (result?.error) {
-      // ✅ Type the toast parameter
+      // หากเกิดข้อผิดพลาดในการลงทะเบียน ให้ดึงข้อความ error จาก response ของ API หากไม่มีให้ใช้ข้อความ "Registration failed" เป็นค่าเริ่มต้น
+      // และแสดงข้อความข้อผิดพลาดผ่าน toast โดยมีการปรับปรุง logic ในการแนะนำวิธีแก้ไขข้อผิดพลาดให้เหมาะสมกับข้อความ error ที่ได้รับจาก API 
       toast.custom((t: string | number) => (
         <div className="bg-red-500 text-white p-4 rounded-lg shadow-lg flex justify-between items-start max-w-md">
           <div className="flex-1">
@@ -269,6 +282,8 @@ const SignUpPage = () => {
           </div>
         </div>
       </main>
+      {/* Footer */}
+      <Footer />
     </section>
   );
 };
