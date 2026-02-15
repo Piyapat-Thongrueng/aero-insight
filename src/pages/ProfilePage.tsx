@@ -6,7 +6,7 @@ import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import Footer from "@/components/layout/Footer";
 
-const MemberPage = () => {
+const ProfilePage = () => {
   return (
     <div className="w-full min-h-screen bg-white flex flex-col">
       <Navbar />
@@ -116,4 +116,4 @@ const MemberPage = () => {
   );
 };
 
-export default MemberPage;
+export default ProfilePage; 
