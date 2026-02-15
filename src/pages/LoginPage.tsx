@@ -19,19 +19,19 @@ interface LoginFormErrors {
 }
 
 const LoginPage = () => {
-  // Hooks and State Declarations
+  // ขั้นตอนที่ 1: เรียกใช้ useAuth เพื่อเข้าถึงฟังก์ชัน login และสถานะการโหลดจาก context
   const { login, state } = useAuth();
   const navigate = useNavigate();
 
-  // Form State
+  // ขั้นตอนที่ 2: กำหนดสถานะของฟอร์ม
   const [formValues, setFormValues] = useState<LoginFormValues>({
     email: "",
     password: "",
   });
-  // Form Errors State
+  // ขั้นตอนที่ 3: กำหนดสถานะของข้อผิดพลาดในฟอร์ม
   const [formErrors, setFormErrors] = useState<LoginFormErrors>({});
 
-  // Input Validation Function
+  // ขั้นตอนที่ 4: ฟังก์ชันตรวจสอบความถูกต้องของข้อมูลในฟอร์ม
   const validateInputs = (): LoginFormErrors => {
     const errors: LoginFormErrors = {};
 
@@ -58,14 +58,17 @@ const LoginPage = () => {
     }));
   };
 
-  // Form Submission Handler
+  // ขั้นตอนที่ 5: ฟังก์ชันจัดการการส่งฟอร์ม
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    // เรียกใช้ฟังก์ชัน validateInputs เพื่อตรวจสอบความถูกต้องของข้อมูลในฟอร์มแล้วเก็บข้อผิดพลาดในสถานะ formErrors
     const errors = validateInputs();
+    // ถ้ามีข้อผิดพลาดใด ๆ ให้แสดงข้อผิดพลาดและหยุดการส่งฟอร์ม
     if (Object.keys(errors).length > 0) {
       setFormErrors(errors);
       return;
     }
+    // ถ้าไม่มีข้อผิดพลาด ให้เรียกใช้ฟังก์ชัน login จาก context เพื่อทำการเข้าสู่ระบบ
     if (Object.keys(errors).length === 0) {
       const result = await login(formValues);
       if (result?.error) {

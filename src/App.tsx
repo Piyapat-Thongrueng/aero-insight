@@ -6,7 +6,7 @@ import { Toaster } from "sonner";
 import NotFoundPage from "./pages/NotFoundPage";
 import SignUpPage from "./pages/SignUpPage";
 import LoginPage from "./pages/LoginPage";
-import MemberPage from "./pages/MemberPage";
+import MemberPage from "./pages/ProfilePage";
 import SignUpSuccessPage from "./pages/SignUpSuccessPage";
 import AdminLayout from "./components/admin/layout/AdminLayout";
 import ArticleManagementPage from "./pages/admin/ArticleManagementPage";
@@ -26,7 +26,7 @@ function App() {
         <Route path="/" element={<LandingPage />} />
         <Route path="/post/:postId" element={<ViewPostPage />} />
         <Route path="*" element={<NotFoundPage />} />
-        <Route path="/members" element={<MemberPage />} />
+        <Route path="/profile" element={<MemberPage />} />
 
         {/* Authentication Section */}
         <Route
