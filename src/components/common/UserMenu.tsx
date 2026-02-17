@@ -1,7 +1,11 @@
 import { useState, useRef, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { useAuth } from "@/contexts/authentication";
 import { User, Lock, LogOut, ChevronDown } from "lucide-react";
+import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
+import { useAuth } from "@/contexts/authentication";
+
+
+
 
 const UserMenu = () => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
@@ -25,6 +29,7 @@ const UserMenu = () => {
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
+  // Update image key when user profile changes
   const handleProfileClick = () => {
     setIsOpen(false);
     navigate("/profile");
@@ -52,11 +57,17 @@ const UserMenu = () => {
         className="flex items-center gap-3 hover:opacity-80 transition-opacity"
       >
         {/* Profile Picture */}
-        <img
-          src="https://res.cloudinary.com/dcbpjtd1r/image/upload/v1728449784/my-blog-post/xgfy0xnvyemkklcqodkg.jpg" // ✅ ควรเป็น URL ของรูปโปรไฟล์จาก user data
-          alt={state.user.name}
-          className="w-10 h-10 rounded-full object-cover border-2 border-brown-300"
-        />
+        <Avatar>
+          <AvatarImage
+            key={state.user.profile_pic}
+            src={state.user.profile_pic}
+            alt={state.user.name}
+            className="w-10 h-10 rounded-full object-cover border-2 border-brown-300"
+          />
+          <AvatarFallback>
+            <User />
+          </AvatarFallback>
+        </Avatar>
 
         {/* Username */}
         <span className="text-brown-600 font-medium hidden lg:block">
