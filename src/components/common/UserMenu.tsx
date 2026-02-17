@@ -2,7 +2,8 @@ import { useState, useRef, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { User, Lock, LogOut, ChevronDown } from "lucide-react";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
-import { useAuth } from "@/contexts/Authentication";
+import { useAuth } from "@/contexts/authentication";
+
 
 
 

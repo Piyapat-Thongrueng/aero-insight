@@ -6,7 +6,7 @@ import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import Footer from "@/components/layout/Footer";
 import { useState, useEffect } from "react";
-import { useAuth } from "@/contexts/Authentication";
+import { useAuth } from "@/contexts/authentication";
 import axios from "axios";
 import { toast } from "sonner";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";

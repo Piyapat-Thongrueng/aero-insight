@@ -10,7 +10,7 @@ import SignUpSuccessPage from "./pages/SignUpSuccessPage";
 import AdminLayout from "./components/admin/layout/AdminLayout";
 import ArticleManagementPage from "./pages/admin/ArticleManagementPage";
 import jwtInterceptor from "./utils/jwtIntercepter";
-import { useAuth } from "./contexts/Authentication";
+import { useAuth } from "./contexts/authentication";
 import AuthenticationRoute from "./components/auth/AuthenticationRoute";
 import ProfilePage from "./pages/ProfilePage";
 import ProtectedRoute from "./components/auth/ProtectedRoute";
