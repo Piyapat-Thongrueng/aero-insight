@@ -3,10 +3,10 @@ import LoginButton from "../common/LoginButton";
 import { DropDown } from "../common/DropDown";
 import SignupButton from "../common/SignupButton";
 import { useNavigate } from "react-router-dom";
-import { useAuth } from "@/contexts/authentication";
 import NotificationBell from "../common/NotificationBell";
 import Usermenu from "../common/UserMenu";
 import { Loader2 } from "lucide-react";
+import { useAuth } from "@/contexts/Authentication";
 
 const Navbar = () => {
   // เรียกใช้งาน useAuth เพื่อเข้าถึงสถานะการตรวจสอบสิทธิ์และฟังก์ชันที่เกี่ยวข้องกับการตรวจสอบสิทธิ์ผู้ใช้

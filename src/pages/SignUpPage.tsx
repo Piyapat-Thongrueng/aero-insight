@@ -6,7 +6,7 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { toast } from "sonner";
-import { useAuth } from "@/contexts/authentication";
+import { useAuth } from "@/contexts/Authentication";
 import { Loader2, X } from "lucide-react";
 
 interface SignUpFormValues {
