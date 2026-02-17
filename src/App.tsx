@@ -11,7 +11,7 @@ import AdminLayout from "./components/admin/layout/AdminLayout";
 import ArticleManagementPage from "./pages/admin/ArticleManagementPage";
 import jwtInterceptor from "./utils/jwtIntercepter";
 import { useAuth } from "./contexts/authentication";
-import AuthenticationRoute from "./components/auth/AuthenticationRoute";
+import AuthenticationRoute from "./components/auth/authenticationRoute";
 import ProfilePage from "./pages/ProfilePage";
 import ProtectedRoute from "./components/auth/ProtectedRoute";
 
