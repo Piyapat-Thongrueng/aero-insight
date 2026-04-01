@@ -33,6 +33,7 @@ interface RegisterData {
 interface AuthContextValue {
   state: AuthState;
   login: (data: LoginData) => Promise<{ error?: string } | void>;
+  adminLogin: (data: LoginData) => Promise<{ error?: string } | void>;
   logout: () => void;
   register: (data: RegisterData) => Promise<{ error?: string } | void>;
   isAuthenticated: boolean;
@@ -149,6 +150,34 @@ function AuthProvider({ children }: AuthProviderProps) {
     }
   };
 
+  // Admin Login
+  const adminLogin = async (
+    data: LoginData,
+  ): Promise<{ error?: string } | void> => {
+    try {
+      setState((prevState) => ({ ...prevState, loading: true, error: null }));
+      const response = await axios.post(
+        `${API_BASE_URL}/auth/login/admin`,
+        data,
+      );
+      const token = response.data.access_token;
+      localStorage.setItem("token", token);
+      setState((prevState) => ({ ...prevState, loading: false, error: null }));
+      navigate("/admin/articles");
+      await fetchUser();
+    } catch (error) {
+      const axiosError = error as AxiosError<ErrorResponse>;
+      const errorMessage =
+        axiosError.response?.data?.error || "Admin login failed";
+      setState((prevState) => ({
+        ...prevState,
+        loading: false,
+        error: errorMessage,
+      }));
+      return { error: errorMessage };
+    }
+  };
+
   // Register user
   const register = async (
     data: RegisterData,
@@ -196,6 +225,7 @@ function AuthProvider({ children }: AuthProviderProps) {
       value={{
         state,
         login,
+        adminLogin,
         logout,
         register,
         isAuthenticated,

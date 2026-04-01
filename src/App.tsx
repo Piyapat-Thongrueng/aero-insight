@@ -9,6 +9,7 @@ import LoginPage from "./pages/LoginPage";
 import SignUpSuccessPage from "./pages/SignUpSuccessPage";
 import AdminLayout from "./components/admin/layout/AdminLayout";
 import ArticleManagementPage from "./pages/admin/ArticleManagementPage";
+import AdminLoginPage from "./pages/admin/AdminLoginPage";
 import jwtInterceptor from "./utils/jwtIntercepter";
 import { useAuth } from "./contexts/authentication";
 import AuthenticationRoute from "./components/auth/authenticationRoute";
@@ -79,7 +80,21 @@ function App() {
         />
 
         {/* Admin Routes */}
-        <Route path="/admin" element={<AdminLayout />}>
+        <Route path="/admin/login" element={<AdminLoginPage />} />
+        <Route
+          path="/admin"
+          element={
+            <ProtectedRoute
+              isLoading={state.getUserLoading}
+              isAuthenticated={isAuthenticated}
+              userRole={state.user?.role ?? null}
+              requiredRole="admin"
+              redirectTo="/admin/login"
+            >
+              <AdminLayout />
+            </ProtectedRoute>
+          }
+        >
           <Route index element={<Navigate to="/admin/articles" replace />} />
           <Route path="articles" element={<ArticleManagementPage />} />
         </Route>
