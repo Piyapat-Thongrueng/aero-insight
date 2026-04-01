@@ -7,6 +7,7 @@ interface ProtectedRouteProps {
   isAuthenticated: boolean;
   userRole: string | null;
   requiredRole: string;
+  redirectTo?: string;
   children: React.ReactNode;
 }
 
@@ -15,6 +16,7 @@ function ProtectedRoute({
   isAuthenticated,
   userRole,
   requiredRole,
+  redirectTo = "/login",
   children,
 }: ProtectedRouteProps): ReactNode {
 
@@ -32,7 +34,7 @@ function ProtectedRoute({
 
   if (!isAuthenticated || userRole !== requiredRole) {
     // หากผู้ใช้ไม่ได้เข้าสู่ระบบหรือบทบาทของผู้ใช้ไม่ตรงกับบทบาทที่ต้องการ ให้เปลี่ยนเส้นทางไปยังหน้าเข้าสู่ระบบ
-    return <Navigate to="/login" replace />;
+    return <Navigate to={redirectTo} replace />;
   }
 
   // ผู้ใช้ได้เข้าสู่ระบบและมีบทบาทที่ถูกต้อง

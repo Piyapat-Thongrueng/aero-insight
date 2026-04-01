@@ -33,6 +33,7 @@ interface RegisterData {
 interface AuthContextValue {
   state: AuthState;
   login: (data: LoginData) => Promise<{ error?: string } | void>;
+  adminLogin: (data: LoginData) => Promise<{ error?: string } | void>;
   logout: () => void;
   register: (data: RegisterData) => Promise<{ error?: string } | void>;
   isAuthenticated: boolean;
@@ -89,7 +90,6 @@ function AuthProvider({ children }: AuthProviderProps) {
         },
       });
 
-      console.log("fetchUser response:", response.data);
       // เมื่อได้รับข้อมูลผู้ใช้สำเร็จ ให้ตั้งสถานะ user เป็นข้อมูลที่ได้รับจาก API และ getUserLoading เป็น false เพื่อแสดงว่าการโหลดข้อมูลผู้ใช้เสร็จสิ้น
       setState((prevState) => ({
         ...prevState,
@@ -101,6 +101,10 @@ function AuthProvider({ children }: AuthProviderProps) {
       // เป็นข้อความที่ได้รับจาก API หรือข้อความทั่วไป และตั้งสถานะ user เป็น null และ getUserLoading เป็น false เพื่อแสดงว่าการโหลดข้อมูลผู้ใช้เสร็จสิ้นแม้จะเกิดข้อผิดพลาด
     } catch (error) {
       const axiosError = error as AxiosError<ErrorResponse>;
+      // ถ้า token ไม่ valid (401) ให้ลบออกจาก localStorage ทันที
+      if (axiosError.response?.status === 401) {
+        localStorage.removeItem("token");
+      }
       setState((prevState) => ({
         ...prevState,
         error:
@@ -149,6 +153,34 @@ function AuthProvider({ children }: AuthProviderProps) {
     }
   };
 
+  // Admin Login
+  const adminLogin = async (
+    data: LoginData,
+  ): Promise<{ error?: string } | void> => {
+    try {
+      setState((prevState) => ({ ...prevState, loading: true, error: null }));
+      const response = await axios.post(
+        `${API_BASE_URL}/auth/login/admin`,
+        data,
+      );
+      const token = response.data.access_token;
+      localStorage.setItem("token", token);
+      setState((prevState) => ({ ...prevState, loading: false, error: null }));
+      navigate("/admin/articles");
+      await fetchUser();
+    } catch (error) {
+      const axiosError = error as AxiosError<ErrorResponse>;
+      const errorMessage =
+        axiosError.response?.data?.error || "Admin login failed";
+      setState((prevState) => ({
+        ...prevState,
+        loading: false,
+        error: errorMessage,
+      }));
+      return { error: errorMessage };
+    }
+  };
+
   // Register user
   const register = async (
     data: RegisterData,
@@ -179,6 +211,7 @@ function AuthProvider({ children }: AuthProviderProps) {
 
   // Logout user
   const logout = () => {
+    const isAdmin = state.user?.role === "admin";
     localStorage.removeItem("token");
     setState({
       user: null,
@@ -186,7 +219,7 @@ function AuthProvider({ children }: AuthProviderProps) {
       loading: false,
       getUserLoading: false,
     });
-    navigate("/");
+    navigate(isAdmin ? "/admin/login" : "/");
   };
 
   const isAuthenticated = Boolean(state.user);
@@ -196,6 +229,7 @@ function AuthProvider({ children }: AuthProviderProps) {
       value={{
         state,
         login,
+        adminLogin,
         logout,
         register,
         isAuthenticated,
