@@ -9,6 +9,7 @@ import {
   X,
 } from "lucide-react";
 import weblogo from "../../../assets/icons/web-logo.svg";
+import { useAuth } from "../../../contexts/authentication";
 
 interface AdminSidebarProps {
   isOpen?: boolean;
@@ -16,6 +17,7 @@ interface AdminSidebarProps {
 }
 
 const AdminSidebar = ({ isOpen = false, onClose }: AdminSidebarProps) => {
+  const { logout } = useAuth();
   const menuItems = [
     { path: "/admin/articles", label: "Article management", icon: FileText },
     {
@@ -101,7 +103,7 @@ const AdminSidebar = ({ isOpen = false, onClose }: AdminSidebarProps) => {
           >
             <span className="text-sm md:text-base">hh. website</span>
           </a>
-          <button className="flex items-center gap-3 px-4 py-3 text-gray-600 hover:bg-gray-50 rounded-lg w-full">
+          <button onClick={logout} className="flex items-center gap-3 px-4 py-3 text-gray-600 hover:bg-gray-50 rounded-lg w-full">
             <LogOut className="w-5 h-5" />
             <span className="text-sm md:text-base">Log out</span>
           </button>
