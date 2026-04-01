@@ -47,8 +47,10 @@ function jwtInterceptor() {
           // ลบ token
           localStorage.removeItem("token");
 
-          // Redirect ไป login page
-          window.location.replace("/login");
+          // Redirect ไปยังหน้า login ที่เหมาะสม
+          // ถ้ากำลังอยู่ใน admin route ให้ redirect ไป /admin/login
+          const isAdminRoute = window.location.pathname.startsWith("/admin");
+          window.location.replace(isAdminRoute ? "/admin/login" : "/login");
         }
       }
 

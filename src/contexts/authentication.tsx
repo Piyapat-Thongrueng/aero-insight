@@ -90,7 +90,6 @@ function AuthProvider({ children }: AuthProviderProps) {
         },
       });
 
-      console.log("fetchUser response:", response.data);
       // เมื่อได้รับข้อมูลผู้ใช้สำเร็จ ให้ตั้งสถานะ user เป็นข้อมูลที่ได้รับจาก API และ getUserLoading เป็น false เพื่อแสดงว่าการโหลดข้อมูลผู้ใช้เสร็จสิ้น
       setState((prevState) => ({
         ...prevState,
@@ -102,6 +101,10 @@ function AuthProvider({ children }: AuthProviderProps) {
       // เป็นข้อความที่ได้รับจาก API หรือข้อความทั่วไป และตั้งสถานะ user เป็น null และ getUserLoading เป็น false เพื่อแสดงว่าการโหลดข้อมูลผู้ใช้เสร็จสิ้นแม้จะเกิดข้อผิดพลาด
     } catch (error) {
       const axiosError = error as AxiosError<ErrorResponse>;
+      // ถ้า token ไม่ valid (401) ให้ลบออกจาก localStorage ทันที
+      if (axiosError.response?.status === 401) {
+        localStorage.removeItem("token");
+      }
       setState((prevState) => ({
         ...prevState,
         error:
@@ -208,6 +211,7 @@ function AuthProvider({ children }: AuthProviderProps) {
 
   // Logout user
   const logout = () => {
+    const isAdmin = state.user?.role === "admin";
     localStorage.removeItem("token");
     setState({
       user: null,
@@ -215,7 +219,7 @@ function AuthProvider({ children }: AuthProviderProps) {
       loading: false,
       getUserLoading: false,
     });
-    navigate("/");
+    navigate(isAdmin ? "/admin/login" : "/");
   };
 
   const isAuthenticated = Boolean(state.user);
