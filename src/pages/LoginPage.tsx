@@ -87,7 +87,6 @@ const LoginPage = () => {
           </div>
         ));
       }
-      navigate("/");
     }
   };
 

@@ -36,6 +36,7 @@ function App() {
             <AuthenticationRoute
               isLoading={state.getUserLoading}
               isAuthenticated={isAuthenticated}
+              userRole={state.user?.role ?? null}
             >
               <SignUpPage />
             </AuthenticationRoute>
@@ -47,6 +48,7 @@ function App() {
             <AuthenticationRoute
               isLoading={state.getUserLoading}
               isAuthenticated={isAuthenticated}
+              userRole={state.user?.role ?? null}
             >
               <LoginPage />
             </AuthenticationRoute>
@@ -58,6 +60,7 @@ function App() {
             <AuthenticationRoute
               isLoading={state.getUserLoading}
               isAuthenticated={isAuthenticated}
+              userRole={state.user?.role ?? null}
             >
               <SignUpSuccessPage />
             </AuthenticationRoute>
@@ -80,7 +83,18 @@ function App() {
         />
 
         {/* Admin Routes */}
-        <Route path="/admin/login" element={<AdminLoginPage />} />
+        <Route
+          path="/admin/login"
+          element={
+            <AuthenticationRoute
+              isLoading={state.getUserLoading}
+              isAuthenticated={isAuthenticated}
+              userRole={state.user?.role ?? null}
+            >
+              <AdminLoginPage />
+            </AuthenticationRoute>
+          }
+        />
         <Route
           path="/admin"
           element={

@@ -37,7 +37,7 @@ interface AuthContextValue {
   logout: () => void;
   register: (data: RegisterData) => Promise<{ error?: string } | void>;
   isAuthenticated: boolean;
-  fetchUser: () => Promise<void>;
+  fetchUser: () => Promise<User | null>;
 }
 
 interface AuthProviderProps {
@@ -69,7 +69,7 @@ function AuthProvider({ children }: AuthProviderProps) {
   const navigate = useNavigate();
 
   // Fetch user details using Supabase API
-  const fetchUser = async (): Promise<void> => {
+  const fetchUser = async (): Promise<User | null> => {
     // ดึง token จาก localStorage เพื่อใช้ในการตรวจสอบสิทธิ์ในการเข้าถึงข้อมูลผู้ใช้ หากไม่มี token ให้ตั้งสถานะ user เป็น null และ getUserLoading เป็น false แล้วออกจากฟังก์ชัน
     const token = localStorage.getItem("token");
     if (!token) {
@@ -78,7 +78,7 @@ function AuthProvider({ children }: AuthProviderProps) {
         user: null,
         getUserLoading: false,
       }));
-      return;
+      return null;
     }
 
     // หากมี token ให้ตั้งสถานะ getUserLoading เป็น true เพื่อแสดงว่ากำลังโหลดข้อมูลผู้ใช้ จากนั้นส่งคำขอ GET ไปยัง API เพื่อดึงข้อมูลผู้ใช้ โดยแนบ token ใน header ของคำขอเพื่อยืนยันตัวตน
@@ -96,6 +96,7 @@ function AuthProvider({ children }: AuthProviderProps) {
         user: response.data,
         getUserLoading: false,
       }));
+      return response.data;
 
       // หากเกิดข้อผิดพลาดในการดึงข้อมูลผู้ใช้ เช่น token ไม่ถูกต้อง หรือมีปัญหาในการเชื่อมต่อกับ API ให้จับข้อผิดพลาดและตั้งสถานะ error
       // เป็นข้อความที่ได้รับจาก API หรือข้อความทั่วไป และตั้งสถานะ user เป็น null และ getUserLoading เป็น false เพื่อแสดงว่าการโหลดข้อมูลผู้ใช้เสร็จสิ้นแม้จะเกิดข้อผิดพลาด
@@ -114,6 +115,7 @@ function AuthProvider({ children }: AuthProviderProps) {
         user: null,
         getUserLoading: false,
       }));
+      return null;
     }
   };
 
@@ -133,12 +135,12 @@ function AuthProvider({ children }: AuthProviderProps) {
       // จากนั้นนำทางผู้ใช้ไปยังหน้าแรกของแอปและเรียกฟังก์ชัน fetchUser เพื่อโหลดข้อมูลผู้ใช้ทันทีหลังจากเข้าสู่ระบบสำเร็จ
       const token = response.data.access_token;
       localStorage.setItem("token", token);
-
-      // Fetch and set user details
       setState((prevState) => ({ ...prevState, loading: false, error: null }));
-      // นำทางผู้ใช้ไปยังหน้าแรกของแอปและเรียกฟังก์ชัน fetchUser เพื่อโหลดข้อมูลผู้ใช้ทันทีหลังจากเข้าสู่ระบบสำเร็จ
-      navigate("/");
-      await fetchUser();
+
+      // fetchUser ก่อน navigate เพื่อให้ state.user ถูกเซ็ตก่อน ProtectedRoute ตรวจสอบ
+      const user = await fetchUser();
+      // redirect ตาม role: admin ไปที่ admin dashboard, user ไปที่หน้าแรก
+      navigate(user?.role === "admin" ? "/admin/articles" : "/");
     } catch (error) {
       const axiosError = error as AxiosError<ErrorResponse>;
       const errorMessage = axiosError.response?.data?.error || "Login failed";
