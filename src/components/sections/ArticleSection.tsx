@@ -1,7 +1,7 @@
 import ArticleFilter from "../articles/ArticleFilter";
 import ArticleGrid from "../articles/ArticleGrid";
 import ViewMoreButton from "../articles/ViewMoreButton";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import axios from "axios";
 
 interface PostListProps {
@@ -17,24 +17,37 @@ interface PostListProps {
 }
 
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
+const ALL_CATEGORY = "ทั้งหมด";
 
 const ArticleSection = () => {
-  // ใช้ map ข้อมูล category
-  const categories: string[] = ["Highlight", "Cat", "Inspiration", "General"];
-
-  const [selectedCategory, setSelectedCategory] = useState<string>("Highlight");
+  const [categories, setCategories] = useState<string[]>([ALL_CATEGORY]);
+  const [selectedCategory, setSelectedCategory] = useState<string>(ALL_CATEGORY);
   const [postList, setPostList] = useState<PostListProps[]>([]);
   const [page, setPage] = useState<number>(1);
   const [hasMore, setHasMore] = useState<boolean>(true);
   const [isLoading, setIsLoading] = useState<boolean>(false);
+  const latestRequestRef = useRef(0);
+
+  const fetchCategories = async () => {
+    try {
+      const response = await axios.get(`${API_BASE_URL}/categories`);
+      const categoryNames = (response.data?.data ?? [])
+        .map((category: { name?: string }) => category?.name?.trim())
+        .filter((name: string | undefined): name is string => Boolean(name));
+
+      setCategories([ALL_CATEGORY, ...categoryNames]);
+    } catch (error) {
+      console.error("Error fetching categories:", error);
+      setCategories([ALL_CATEGORY]);
+    }
+  };
 
   // 1. Fetch post data from API using axios
   const fetchPosts = async (category: string, pageNum: number) => {
-    if (isLoading) return;
-
+    const requestId = ++latestRequestRef.current;
     setIsLoading(true);
     try {
-      const categoryParam = category === "Highlight" ? "" : category;
+      const categoryParam = category === ALL_CATEGORY ? "" : category;
       const response = await axios.get(
         `${API_BASE_URL}/posts`,
         {
@@ -47,6 +60,10 @@ const ArticleSection = () => {
       );
       const newPosts = response.data.posts || [];
 
+      if (requestId !== latestRequestRef.current) {
+        return;
+      }
+
       //  เพิ่มโพสต์ใหม่ต่อท้ายโพสต์เดิม (ไม่แทนที่)
       setPostList((prevPosts) => {
         const existingPostId = prevPosts.map((post) => post.id);
@@ -56,15 +73,19 @@ const ArticleSection = () => {
         return [...prevPosts, ...filteredNewPosts];
       });
       // เช็คว่ายังมีข้อมูลเหลือไหม
-      if (response.data.currentPage >= response.data.totalPages) {
-        setHasMore(false);
-      }
+      setHasMore(response.data.currentPage < response.data.totalPages);
     } catch (error) {
       console.error("Error fetching posts:", error);
     } finally {
-      setIsLoading(false);
+      if (requestId === latestRequestRef.current) {
+        setIsLoading(false);
+      }
     }
   };
+
+  useEffect(() => {
+    fetchCategories();
+  }, []);
 
   // Effect 1: รีเซ็ตเมื่อเปลี่ยน category
   useEffect(() => {

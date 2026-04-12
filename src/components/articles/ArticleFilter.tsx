@@ -43,6 +43,7 @@ const ArticleFilter = ({
         </p>
         <div className="lg:hidden">
           <SelectScrollable
+            categories={categories}
             value={selectedCategory}
             onValueChange={setSelectedCategory}
           />

@@ -7,16 +7,16 @@ import {
 } from "@/components/ui/select";
 
 interface SelectScrollableProps {
+  categories: string[];
   value: string;
   onValueChange: (value: string) => void;
 }
 
 export function SelectScrollable({
+  categories,
   value,
   onValueChange,
 }: SelectScrollableProps) {
-  const categories = ["Highlight", "Cat", "Inspiration", "General"];
-
   return (
     <Select value={value} onValueChange={onValueChange}>
       <SelectTrigger className="w-full bg-white py-6 px-3 text-body-1 border border-brown-300 cursor-pointer">
