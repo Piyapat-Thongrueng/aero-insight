@@ -12,43 +12,56 @@ interface Post {
 }
 
 export function SearchFeature() {
+  const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
   const [searchQuery, setSearchQuery] = useState("");
   const [searchResults, setSearchResults] = useState<Post[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [showResults, setShowResults] = useState(false);
   const searchRef = useRef<HTMLDivElement>(null);
+  const latestRequestRef = useRef(0);
   const navigate = useNavigate();
 
   // ✅ ค้นหาบทความจาก API
 
   const handleSearchPosts = async () => {
+    const keyword = searchQuery.trim();
+
     // ถ้า searchQuery ว่าง ให้ล้างผลลัพธ์การค้นหา
-    if (searchQuery.trim().length < 1) {
+    if (keyword.length < 1) {
+      latestRequestRef.current += 1;
       setSearchResults([]);
       setShowResults(false);
+      setIsLoading(false);
       return;
     }
 
+    const requestId = ++latestRequestRef.current;
     setIsLoading(true);
     setShowResults(true);
     // เรียก API เพื่อค้นหาบทความ
     try {
       const response = await axios.get(
-        "https://blog-post-project-api.vercel.app/posts",
+        `${API_BASE_URL}/posts`,
         {
           params: {
-            keyword: searchQuery,
+            keyword,
             limit: 6,
           },
         },
       );
+
+      if (requestId !== latestRequestRef.current) {
+        return;
+      }
 
       setSearchResults(response.data.posts || []);
     } catch (error) {
       console.error("Search error:", error);
       setSearchResults([]);
     } finally {
-      setIsLoading(false);
+      if (requestId === latestRequestRef.current) {
+        setIsLoading(false);
+      }
     }
   };
 
@@ -85,9 +98,11 @@ export function SearchFeature() {
 
   // ล้างการค้นหา
   const handleClear = () => {
+    latestRequestRef.current += 1;
     setSearchQuery("");
     setSearchResults([]);
     setShowResults(false);
+    setIsLoading(false);
   };
 
   return (

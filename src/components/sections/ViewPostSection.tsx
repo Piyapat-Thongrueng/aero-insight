@@ -7,6 +7,7 @@ import PostHeader from "../viewposts/PostHeader";
 import PostComment from "../viewposts/PostComment";
 import AuthModal from "../modals/AuthModal";
 import { toast } from "sonner";
+import { useAuth } from "@/contexts/authentication";
 
 interface Post {
   id: number;
@@ -20,14 +21,30 @@ interface Post {
   content: string;
 }
 
+interface CommentItem {
+  id: number;
+  post_id: number;
+  user_id: string;
+  comment_text: string;
+  created_at: string;
+  user_name: string;
+  user_profile_pic: string;
+}
+
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
 const ViewPostSection = () => {
+  const { state } = useAuth();
   const [post, setPost] = useState<Post | null>(null);
   const { postId } = useParams<{ postId: string }>();
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [error, setError] = useState<boolean>(false);
   const [showAuthModal, setShowAuthModal] = useState<boolean>(false);
+  const [isLiked, setIsLiked] = useState<boolean>(false);
+  const [isLikeLoading, setIsLikeLoading] = useState<boolean>(false);
+  const [comments, setComments] = useState<CommentItem[]>([]);
+  const [commentText, setCommentText] = useState<string>("");
+  const [isCommentLoading, setIsCommentLoading] = useState<boolean>(false);
 
   const fetchPostById = async (id: string) => {
     setIsLoading(true);
@@ -44,18 +61,120 @@ const ViewPostSection = () => {
     }
   };
 
+  const fetchComments = async (id: string) => {
+    try {
+      const response = await axios.get(`${API_BASE_URL}/posts/${id}/comments`);
+      setComments(response.data?.data || []);
+    } catch (fetchError) {
+      console.error("Error fetching comments:", fetchError);
+      setComments([]);
+    }
+  };
+
+  const fetchMyLikeStatus = async (id: string) => {
+    if (!state.user) {
+      setIsLiked(false);
+      return;
+    }
+
+    try {
+      const response = await axios.get(`${API_BASE_URL}/posts/${id}/likes/me`);
+      setIsLiked(Boolean(response.data?.liked));
+    } catch (fetchError) {
+      console.error("Error fetching my like status:", fetchError);
+      setIsLiked(false);
+    }
+  };
+
   useEffect(() => {
     if (postId) {
       fetchPostById(postId);
+      fetchComments(postId);
+      fetchMyLikeStatus(postId);
     }
-  }, [postId]);
+  }, [postId, state.user]);
 
-  const handleLikeClick = () => {
-    setShowAuthModal(true);
+  const handleLikeClick = async () => {
+    if (!state.user) {
+      setShowAuthModal(true);
+      return;
+    }
+
+    if (!postId || isLikeLoading) {
+      return;
+    }
+
+    try {
+      setIsLikeLoading(true);
+      const response = await axios.post(`${API_BASE_URL}/posts/${postId}/likes/toggle`);
+      const liked = Boolean(response.data?.data?.liked);
+      const likesCount = Number(response.data?.data?.likesCount || 0);
+
+      setIsLiked(liked);
+      setPost((prevPost) =>
+        prevPost
+          ? {
+              ...prevPost,
+              likes: likesCount,
+            }
+          : prevPost,
+      );
+    } catch (likeError) {
+      console.error("Error toggling like:", likeError);
+      toast.error("Failed to update like", {
+        description: "Please try again.",
+        duration: 3000,
+      });
+    } finally {
+      setIsLikeLoading(false);
+    }
   };
 
-  const handleCommentAction = () => {
-    setShowAuthModal(true);
+  const handleCommentFocus = () => {
+    if (!state.user) {
+      setShowAuthModal(true);
+    }
+  };
+
+  const handleCommentSubmit = async () => {
+    if (!state.user) {
+      setShowAuthModal(true);
+      return;
+    }
+
+    if (!postId || isCommentLoading) {
+      return;
+    }
+
+    const normalizedComment = commentText.trim();
+    if (!normalizedComment) {
+      toast.error("Comment cannot be empty", {
+        description: "Please enter your comment before sending.",
+        duration: 3000,
+      });
+      return;
+    }
+
+    try {
+      setIsCommentLoading(true);
+      const response = await axios.post(`${API_BASE_URL}/posts/${postId}/comments`, {
+        comment_text: normalizedComment,
+      });
+
+      const createdComment = response.data?.data;
+      if (createdComment) {
+        setComments((prevComments) => [createdComment, ...prevComments]);
+      }
+      setCommentText("");
+    } catch (commentError) {
+      console.error("Error creating comment:", commentError);
+      toast.error("Failed to send comment", {
+        description: "Please try again.",
+        duration: 3000,
+      });
+    } finally {
+      setIsCommentLoading(false);
+    }
   };
 
   const handleCopyLink = async () => {
@@ -114,8 +233,15 @@ const ViewPostSection = () => {
           <PostContent post={post} />
           <PostComment
             post={post}
+            isLiked={isLiked}
+            isLikeLoading={isLikeLoading}
+            comments={comments}
+            commentText={commentText}
+            isCommentLoading={isCommentLoading}
             onLikeClick={handleLikeClick}
-            onCommentAction={handleCommentAction}
+            onCommentFocus={handleCommentFocus}
+            onCommentTextChange={setCommentText}
+            onCommentSubmit={handleCommentSubmit}
             onCopyLink={handleCopyLink}
           />
           <AuthModal
